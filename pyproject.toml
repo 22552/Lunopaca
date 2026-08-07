@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lunopaca"
+version = "0.1.0"
+description = "A tiny Python framework for the Gemini protocol."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "22552" }
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Internet",
+]
+keywords = ["gemini", "gemini-protocol", "framework"]
+
+[project.urls]
+Repository = "https://github.com/22552/Lunopaca"
+
+[tool.setuptools]
+py-modules = ["lunopaca"]
