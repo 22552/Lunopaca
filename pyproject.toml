@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lunopaca"
 version = "0.1.0"
-description = "A tiny Python framework for the Gemini protocol."
+description = "A tiny standard-library-only Python framework for the Gemini protocol."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
@@ -21,10 +21,14 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
   "Topic :: Internet",
 ]
-keywords = ["gemini", "gemini-protocol", "framework"]
+keywords = ["gemini", "gemini-protocol", "framework", "server", "capsule"]
 
 [project.urls]
 Repository = "https://github.com/22552/Lunopaca"
+Issues = "https://github.com/22552/Lunopaca/issues"
 
 [tool.setuptools]
 py-modules = ["lunopaca"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
