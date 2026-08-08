@@ -1,8 +1,8 @@
 # Lunopaca
 
-A tiny Python framework for the Gemini protocol.
+A tiny, standard-library-only Python framework for the Gemini protocol.
 
-Lunopaca keeps the surface intentionally small: routes, requests, responses, and a TLS Gemini server using only the Python standard library.
+Lunopaca intentionally keeps the surface small: routing, requests, responses, TLS serving, dynamic path parameters, and lightweight error handling.
 
 ## Example
 
@@ -17,13 +17,13 @@ def index(request):
 
 A tiny Gemini framework for Python.
 
-=> /hello Hello
+=> /hello/world Dynamic route
 => /search Search
 """
 
-@app.route("/hello")
+@app.route("/hello/<name>")
 def hello(request):
-    return "# Hello, Gemini!"
+    return f"# Hello, {request.params['name']}!"
 
 @app.route("/search")
 def search(request):
@@ -35,6 +35,10 @@ def search(request):
 def old(request):
     return Redirect("gemini://example.com/new")
 
+@app.errorhandler
+def errors(exc, request):
+    return f"# Error\n\nSomething went wrong at {request.path}."
+
 app.run(
     host="0.0.0.0",
     port=1965,
@@ -43,23 +47,66 @@ app.run(
 )
 ```
 
-## Response helpers
+## Request
+
+Each handler receives a `Request` object with:
+
+- `url`
+- `scheme`
+- `host`
+- `port`
+- `path`
+- `query`
+- `params`
+
+Dynamic route parameters use `<name>` syntax:
+
+```python
+@app.route("/users/<name>")
+def user(request):
+    return f"# {request.params['name']}"
+```
+
+## Responses
+
+Returning a plain string automatically creates a successful `20 text/gemini; charset=utf-8` response.
+
+Helpers:
 
 - `Response(body, status=20, meta="text/gemini; charset=utf-8")`
-- `Input(prompt)` → status `10`
-- `SensitiveInput(prompt)` → status `11`
-- `Redirect(target, permanent=False)` → status `30` or `31`
+- `Input(prompt)` → `10`
+- `SensitiveInput(prompt)` → `11`
+- `Redirect(target, permanent=False)` → `30` / `31`
+- `TemporaryFailure(message, status=40)` → any `4x` status
+- `PermanentFailure(message, status=50)` → any `5x` status
+- `ClientCertificateRequired(message, status=60)` → any `6x` status
 
-Returning a plain string from a route automatically produces a successful `20 text/gemini` response.
+Lunopaca validates response status codes and prevents CR/LF injection in response metadata.
 
-## Philosophy
+## Design
 
 - Gemini only
-- Standard-library only
-- Small, readable core
+- Python standard library only
+- One-file core
 - No ASGI or WSGI abstraction
-- No HTML-oriented concepts
+- Synchronous handlers
+- Dynamic routes without a separate router dependency
+- TLS server included
+
+## Install
+
+Once published to PyPI:
+
+```bash
+pip install lunopaca
+```
+
+For local development:
+
+```bash
+pip install -e .
+```
 
 ## Status
 
-Lunopaca is experimental and not yet released on PyPI.
+Lunopaca is small by design, but the core API is usable as a complete Gemini micro-framework. It is not yet published on PyPI.
