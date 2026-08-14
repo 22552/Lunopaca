@@ -168,11 +168,11 @@ class Lunopaca:
         self._logger = func
         return func
 
-    def url_for(self, name: str, **params: object) -> str:
+    def url_for(self, route_name: str, **params: object) -> str:
         try:
-            pattern = self._named_routes[name]
+            pattern = self._named_routes[route_name]
         except KeyError as exc:
-            raise KeyError(f"unknown route name: {name}") from exc
+            raise KeyError(f"unknown route name: {route_name}") from exc
 
         required = _ROUTE_PARAM.findall(pattern)
         missing = [key for key in required if key not in params]
